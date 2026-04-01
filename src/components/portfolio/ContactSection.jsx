@@ -29,32 +29,51 @@ export default function ContactSection() {
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSending(true);
-    try {
-      const res = await fetch("https://formspree.io/f/mzdkrqez", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          _subject: `📩 [Portfolio] ${form.subject} — від ${form.name}`,
-          name: form.name,
-          email: form.email,
-          subject: form.subject,
-          message: form.message,
-        }),
-      });
+  e.preventDefault();
+  setSending(true);
 
-      if (!res.ok) throw new Error();
+  try {
+    const formData = new FormData();
+    formData.append("name", form.name);
+    formData.append("email", form.email);
+    formData.append("subject", form.subject);
+    formData.append("message", form.message);
+    formData.append(
+      "_subject",
+      `📩 [Portfolio] ${form.subject} — від ${form.name}`
+    );
 
-      setSending(false);
-      setSent(true);
-      toast.success(c.successTitle);
-      setForm({ name: "", email: "", subject: "", message: "" });
-    } catch {
-      setSending(false);
-      toast.error("Something went wrong. Please try again.");
+    const res = await fetch("https://formspree.io/f/mzdkrqez", {
+      method: "POST",
+      headers: {
+        Accept: "application/json", 
+      },
+      body: formData,
+    });
+
+    const data = await res.json();
+
+    if (data.errors) {
+      throw new Error("Formspree error");
     }
-  };
+
+    setSent(true);
+    toast.success(c.successTitle);
+
+    setForm({
+      name: "",
+      email: "",
+      subject: "",
+      message: "",
+    });
+
+  } catch (err) {
+    console.error(err);
+    toast.error("Something went wrong. Please try again.");
+  } finally {
+    setSending(false);
+  }
+};
 
   const contactInfo = [
     { icon: Mail, label: "Email", value: "stewe.snowwhite@ukr.net" },
