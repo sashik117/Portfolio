@@ -1,0 +1,28 @@
+{
+  "name": "Testimonial",
+  "type": "object",
+  "properties": {
+    "author_name": {
+      "type": "string",
+      "description": "Client name"
+    },
+    "author_role": {
+      "type": "string",
+      "description": "Client role / company"
+    },
+    "message": {
+      "type": "string",
+      "description": "Review text"
+    },
+    "approved": {
+      "type": "boolean",
+      "default": false,
+      "description": "Show on site"
+    }
+  },
+  "required": [
+    "author_name",
+    "author_role",
+    "message"
+  ]
+}

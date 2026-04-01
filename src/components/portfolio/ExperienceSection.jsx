@@ -1,0 +1,61 @@
+import { motion } from "framer-motion";
+import { Briefcase, Calendar } from "lucide-react";
+import { useLanguage } from "@/lib/LanguageContext";
+
+function TimelineItem({ exp, index }) {
+  return (
+    <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true, margin: "-60px" }} transition={{ duration: 0.6, ease: "easeOut", delay: index * 0.12 }}
+      className="relative pl-8 pb-12 last:pb-0">
+      <div className="absolute left-0 top-0 bottom-0 w-px bg-border" />
+      <motion.div initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true }}
+        transition={{ duration: 0.4, delay: index * 0.12 + 0.2, type: "spring" }}
+        className="absolute left-0 top-1 -translate-x-1/2 w-3 h-3 rounded-full bg-primary border-4 border-background" />
+      <div className="group p-6 rounded-2xl bg-card border border-border hover:border-primary/30 transition-all duration-300">
+        <div className="flex flex-wrap items-start justify-between gap-2 mb-3">
+          <div>
+            <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">{exp.role}</h3>
+            <div className="flex items-center gap-2 mt-1">
+              <Briefcase className="w-3.5 h-3.5 text-muted-foreground" />
+              <span className="text-sm text-muted-foreground">{exp.company}</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary/60 border border-border">
+            <Calendar className="w-3 h-3 text-muted-foreground" />
+            <span className="text-xs font-mono text-muted-foreground">{exp.period}</span>
+          </div>
+        </div>
+        <p className="text-sm text-muted-foreground leading-relaxed mb-4">{exp.description}</p>
+        <div className="flex flex-wrap gap-2">
+          {exp.tags.map((tag) => (
+            <span key={tag} className="px-2.5 py-1 text-xs font-mono bg-primary/10 text-primary rounded-md">{tag}</span>
+          ))}
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+export default function ExperienceSection() {
+  const { t } = useLanguage();
+  const e = t.experience;
+  return (
+    <section id="experience" className="py-32 px-6 relative overflow-hidden">
+      <div className="absolute top-1/3 right-0 w-72 h-72 bg-accent/10 rounded-full blur-3xl" />
+      <div className="max-w-3xl mx-auto">
+        <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.65, ease: "easeOut" }}
+          className="mb-16">
+          <span className="font-mono text-sm text-primary mb-3 block">{e.label}</span>
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
+            {e.title}{" "}
+            <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">{e.highlight}</span>
+          </h2>
+        </motion.div>
+        <div>
+          {e.items.map((exp, i) => <TimelineItem key={exp.company} exp={exp} index={i} />)}
+        </div>
+      </div>
+    </section>
+  );
+}
