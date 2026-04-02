@@ -26,44 +26,46 @@ export default function ContactSection() {
   const [sent, setSent] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
 
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (sending) return;
+    
     setSending(true);
 
     try {
-      // Використовуємо JSON замість FormData — надійніше на мобільних
-      const res = await fetch("https://formspree.io/f/mzdkrqez", {
+      const data = new FormData();
+      data.append("name", form.name);
+      data.append("email", form.email);
+      data.append("subject", form.subject);
+      data.append("message", form.message);
+      data.append("_subject", `📩 [Portfolio] ${form.subject} від ${form.name}`);
+
+      const response = await fetch("https://formspree.io/f/mzdkrqez", {
         method: "POST",
+        body: data,
         headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          name: form.name,
-          email: form.email,
-          subject: form.subject,
-          message: form.message,
-          _subject: `📩 [Portfolio] ${form.subject} — від ${form.name}`,
-          _replyto: form.email,
-        }),
+          'Accept': 'application/json'
+        }
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        // Formspree повертає errors масив — показуємо його
-        const errorMsg = data?.errors?.map((e) => e.message).join(", ") || "Formspree error";
-        throw new Error(errorMsg);
+      if (response.ok) {
+        setSent(true);
+        toast.success(c.successTitle);
+        setForm({ name: "", email: "", subject: "", message: "" });
+      } else {
+        const errorData = await response.json();
+        alert("Помилка сервера: " + JSON.stringify(errorData));
+        throw new Error(errorData.error || "Помилка сервера");
       }
-
-      setSent(true);
-      toast.success(c.successTitle);
-      setForm({ name: "", email: "", subject: "", message: "" });
     } catch (err) {
-      console.error("Contact form error:", err);
-      toast.error(`Помилка: ${err.message || "Спробуй ще раз"}`);
+      console.error("Form error:", err);
+      alert("Критична помилка: " + err.message);
+      toast.error(`Помилка: ${err.message || "З'єднання перервано"}`);
     } finally {
       setSending(false);
     }
@@ -77,9 +79,10 @@ export default function ContactSection() {
 
   return (
     <section id="contact" className="py-32 px-6 relative overflow-hidden">
-      <div className="absolute bottom-0 left-1/3 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
+      {/* Декор - додано z-0 та pointer-events-none, щоб не заважав клікам */}
+      <div className="absolute bottom-0 left-1/3 w-72 h-72 bg-primary/10 rounded-full blur-3xl z-0 pointer-events-none" />
 
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-6xl mx-auto relative z-10">
         <motion.div {...fadeUp()} className="mb-16">
           <span className="font-mono text-sm text-primary mb-3 block">{c.label}</span>
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
@@ -89,7 +92,6 @@ export default function ContactSection() {
         </motion.div>
 
         <div className="grid lg:grid-cols-5 gap-12">
-          {/* Left */}
           <motion.div {...fadeUp(0.15)} className="lg:col-span-2 space-y-8">
             <p className="text-muted-foreground leading-relaxed">{c.desc}</p>
 
@@ -107,63 +109,38 @@ export default function ContactSection() {
               ))}
             </div>
 
-            <div>
-              <p className="text-sm font-medium mb-4">{c.findOnline}</p>
-              <div className="flex gap-3">
-                {[
-                  { label: "GitHub", href: SOCIAL_LINKS.github },
-                  { label: "Telegram", href: SOCIAL_LINKS.telegram },
-                ].map(({ label, href }) => (
-                  <a key={label} href={href} target="_blank" rel="noopener noreferrer"
-                    className="px-4 py-2 text-xs font-mono bg-secondary/50 border border-border rounded-lg text-muted-foreground hover:text-foreground hover:border-primary/20 transition-all">
-                    {label} ↗
-                  </a>
-                ))}
-              </div>
+            <div className="flex gap-3 mt-4">
+              <a href={SOCIAL_LINKS.github} target="_blank" rel="noopener noreferrer" className="px-4 py-2 text-xs font-mono bg-secondary/50 border border-border rounded-lg text-muted-foreground hover:text-foreground transition-all">GitHub ↗</a>
+              <a href={SOCIAL_LINKS.telegram} target="_blank" rel="noopener noreferrer" className="px-4 py-2 text-xs font-mono bg-secondary/50 border border-border rounded-lg text-muted-foreground hover:text-foreground transition-all">Telegram ↗</a>
             </div>
           </motion.div>
 
-          {/* Right - Form */}
           <motion.div {...fadeUp(0.25)} className="lg:col-span-3">
             {sent ? (
               <div className="p-8 rounded-2xl bg-card border border-border flex flex-col items-center justify-center gap-4 min-h-[360px] text-center">
-                <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}
-                  transition={{ type: "spring", stiffness: 260, damping: 20 }}
-                  className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-                  <CheckCircle className="w-8 h-8 text-primary" />
-                </motion.div>
+                <CheckCircle className="w-12 h-12 text-primary" />
                 <h3 className="text-xl font-semibold">{c.successTitle}</h3>
-                <p className="text-muted-foreground text-sm">{c.successDesc}</p>
-                <button onClick={() => setSent(false)} className="mt-2 text-sm text-primary hover:underline">
-                  {c.sendAnother}
-                </button>
+                <button onClick={() => setSent(false)} className="mt-2 text-sm text-primary hover:underline">{c.sendAnother}</button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="p-8 rounded-2xl bg-card border border-border space-y-6">
+              <form 
+                onSubmit={handleSubmit} 
+                data-netlify="false"
+                noValidate
+                className="p-8 rounded-2xl bg-card border border-border space-y-6 relative z-20"
+              >
                 <div className="grid sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">{c.name}</label>
-                    <Input name="name" required value={form.name} onChange={handleChange} placeholder={c.namePh} className="bg-secondary/50 border-border" />
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">{c.email}</label>
-                    <Input name="email" type="email" required value={form.email} onChange={handleChange} placeholder="john@example.com" className="bg-secondary/50 border-border" />
-                  </div>
+                  <Input name="name" required value={form.name} onChange={handleChange} placeholder={c.namePh} autoComplete="name" className="bg-secondary/50" />
+                  <Input name="email" type="email" required value={form.email} onChange={handleChange} placeholder="Email" autoComplete="email" className="bg-secondary/50" />
                 </div>
-                <div>
-                  <label className="text-sm font-medium mb-2 block">{c.subject}</label>
-                  <Input name="subject" required value={form.subject} onChange={handleChange} placeholder={c.subjectPh} className="bg-secondary/50 border-border" />
-                </div>
-                <div>
-                  <label className="text-sm font-medium mb-2 block">{c.message}</label>
-                  <Textarea name="message" required value={form.message} onChange={handleChange} placeholder={c.messagePh} rows={5} className="bg-secondary/50 border-border resize-none" />
-                </div>
-                <Button type="submit" disabled={sending} className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl h-12 font-medium glow-primary">
-                  {sending ? (
-                    <div className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-                  ) : (
-                    <><Send className="w-4 h-4 mr-2" />{c.send}</>
-                  )}
+                <Input name="subject" required value={form.subject} onChange={handleChange} placeholder={c.subjectPh} className="bg-secondary/50" />
+                <Textarea name="message" required value={form.message} onChange={handleChange} placeholder={c.messagePh} rows={5} className="bg-secondary/50 resize-none" />
+                <Button 
+                  type="submit" 
+                  disabled={sending} 
+                  className="w-full h-12 active:scale-95 transition-transform"
+                >
+                  {sending ? <div className="w-5 h-5 border-2 border-t-transparent rounded-full animate-spin" /> : <><Send className="w-4 h-4 mr-2" />{c.send}</>}
                 </Button>
               </form>
             )}
