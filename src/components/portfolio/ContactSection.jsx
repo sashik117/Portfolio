@@ -33,28 +33,37 @@ export default function ContactSection() {
     setSending(true);
 
     try {
-      const formData = new FormData();
-      formData.append("name", form.name);
-      formData.append("email", form.email);
-      formData.append("subject", form.subject);
-      formData.append("message", form.message);
-      formData.append("_subject", `📩 [Portfolio] ${form.subject} — від ${form.name}`);
-      formData.append("_replyto", form.email);
-
+      // Використовуємо JSON замість FormData — надійніше на мобільних
       const res = await fetch("https://formspree.io/f/mzdkrqez", {
         method: "POST",
-        headers: { Accept: "application/json" },
-        body: formData,
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          subject: form.subject,
+          message: form.message,
+          _subject: `📩 [Portfolio] ${form.subject} — від ${form.name}`,
+          _replyto: form.email,
+        }),
       });
 
-      if (!res.ok) throw new Error("Formspree error");
+      const data = await res.json();
+
+      if (!res.ok) {
+        // Formspree повертає errors масив — показуємо його
+        const errorMsg = data?.errors?.map((e) => e.message).join(", ") || "Formspree error";
+        throw new Error(errorMsg);
+      }
 
       setSent(true);
       toast.success(c.successTitle);
       setForm({ name: "", email: "", subject: "", message: "" });
     } catch (err) {
-      console.error(err);
-      toast.error("Something went wrong. Please try again.");
+      console.error("Contact form error:", err);
+      toast.error(`Помилка: ${err.message || "Спробуй ще раз"}`);
     } finally {
       setSending(false);
     }
