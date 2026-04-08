@@ -9,8 +9,8 @@ import { useLanguage } from "@/lib/LanguageContext";
 import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
-  "https://wzgvtcrzhikqontraaoy.supabase.co",
-  "sb_publishable_O7efFGxHFmTWQypKCaiIpg_bjwbiX2Q"
+  "https://bymjscuabkglfngaitai.supabase.co",
+  "sb_publishable_j85NFKIu4Ego-b0iwpVF8Q_867wrRuU"
 );
 
 const SAMPLE_TESTIMONIALS = [
