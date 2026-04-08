@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Briefcase, Calendar } from "lucide-react";
 import { useLanguage } from "@/lib/LanguageContext";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/api/SupabaseClient.js";
 
 const FALLBACK_EXPERIENCE = [
   {

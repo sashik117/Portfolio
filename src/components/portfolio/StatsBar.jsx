@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/lib/LanguageContext";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/api/SupabaseClient.js";
 
 const STAT_KEYS = [
   { value: "stat_projects", label: "stat_projects_label" },

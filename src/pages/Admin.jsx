@@ -3,7 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Terminal, LogOut, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/api/SupabaseClient.js";
 import AdminProjects from "@/components/admin/AdminProjects";
 import AdminExperience from "@/components/admin/AdminExperience";
 import AdminSettings from "@/components/admin/AdminSettings";

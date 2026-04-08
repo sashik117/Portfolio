@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ExternalLink, Github } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/lib/LanguageContext";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/api/SupabaseClient.js";
 
 const CATEGORIES_UK = ["Всі", "Full-Stack", "Automation", "Backend"];
 const CATEGORIES_EN = ["All", "Full-Stack", "Automation", "Backend"];
