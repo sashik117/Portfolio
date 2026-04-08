@@ -1,6 +1,20 @@
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Briefcase, Calendar } from "lucide-react";
 import { useLanguage } from "@/lib/LanguageContext";
+import { supabase } from "@/lib/supabase";
+
+const FALLBACK_EXPERIENCE = [
+  {
+    id: "fe1",
+    role: "Web Developer & Automation Specialist",
+    company: "Freelance",
+    period: "2022 — Сьогодні",
+    description_uk: "Побудував систему інтеграції, яка повністю виключила ручне введення даних про клієнтів. Оптимізував ядро великого порталу, підвищивши швидкість його роботи вдвічі.",
+    description_en: "Built an integration system that completely eliminated manual client data entry. Optimized the core of a large portal, doubling its performance speed.",
+    tags: ["WordPress", "Node.js", "n8n", "API Integrations"],
+  },
+];
 
 function TimelineItem({ exp, index }) {
   return (
@@ -27,7 +41,7 @@ function TimelineItem({ exp, index }) {
         </div>
         <p className="text-sm text-muted-foreground leading-relaxed mb-4">{exp.description}</p>
         <div className="flex flex-wrap gap-2">
-          {exp.tags.map((tag) => (
+          {(exp.tags || []).map((tag) => (
             <span key={tag} className="px-2.5 py-1 text-xs font-mono bg-primary/10 text-primary rounded-md">{tag}</span>
           ))}
         </div>
@@ -37,8 +51,21 @@ function TimelineItem({ exp, index }) {
 }
 
 export default function ExperienceSection() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const e = t.experience;
+  const [items, setItems] = useState(FALLBACK_EXPERIENCE);
+
+  useEffect(() => {
+    supabase.from("experience").select("*").order("order").then(({ data }) => {
+      if (data && data.length > 0) setItems(data);
+    });
+  }, []);
+
+  const adapted = items.map(exp => ({
+    ...exp,
+    description: lang === "uk" ? (exp.description_uk || exp.description) : (exp.description_en || exp.description),
+  }));
+
   return (
     <section id="experience" className="py-32 px-6 relative overflow-hidden">
       <div className="absolute top-1/3 right-0 w-72 h-72 bg-accent/10 rounded-full blur-3xl" />
@@ -53,7 +80,7 @@ export default function ExperienceSection() {
           </h2>
         </motion.div>
         <div>
-          {e.items.map((exp, i) => <TimelineItem key={exp.company} exp={exp} index={i} />)}
+          {adapted.map((exp, i) => <TimelineItem key={exp.id || exp.company} exp={exp} index={i} />)}
         </div>
       </div>
     </section>

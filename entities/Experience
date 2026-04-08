@@ -1,0 +1,43 @@
+{
+  "name": "Experience",
+  "type": "object",
+  "properties": {
+    "role": {
+      "type": "string",
+      "description": "Job title / role"
+    },
+    "company": {
+      "type": "string",
+      "description": "Company name"
+    },
+    "period": {
+      "type": "string",
+      "description": "Period (e.g. 2022 \u2014 Present)"
+    },
+    "description_uk": {
+      "type": "string",
+      "description": "Description in Ukrainian"
+    },
+    "description_en": {
+      "type": "string",
+      "description": "Description in English"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Tech tags"
+    },
+    "order": {
+      "type": "number",
+      "description": "Display order",
+      "default": 0
+    }
+  },
+  "required": [
+    "role",
+    "company",
+    "period"
+  ]
+}

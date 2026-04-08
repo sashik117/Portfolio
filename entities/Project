@@ -1,0 +1,55 @@
+{
+  "name": "Project",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Project title"
+    },
+    "desc_uk": {
+      "type": "string",
+      "description": "Description in Ukrainian"
+    },
+    "desc_en": {
+      "type": "string",
+      "description": "Description in English"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Tech tags"
+    },
+    "categories": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Categories"
+    },
+    "live_url": {
+      "type": "string",
+      "description": "Live URL"
+    },
+    "github_url": {
+      "type": "string",
+      "description": "GitHub URL"
+    },
+    "color": {
+      "type": "string",
+      "description": "Gradient color class",
+      "default": "from-primary/20 to-accent/20"
+    },
+    "order": {
+      "type": "number",
+      "description": "Display order",
+      "default": 0
+    }
+  },
+  "required": [
+    "title",
+    "desc_uk",
+    "desc_en"
+  ]
+}

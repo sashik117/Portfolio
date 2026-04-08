@@ -1,0 +1,26 @@
+{
+  "name": "SiteSettings",
+  "type": "object",
+  "properties": {
+    "key": {
+      "type": "string",
+      "description": "Unique key identifier"
+    },
+    "value_uk": {
+      "type": "string",
+      "description": "Value in Ukrainian"
+    },
+    "value_en": {
+      "type": "string",
+      "description": "Value in English"
+    },
+    "group": {
+      "type": "string",
+      "description": "Group: stats, hero, about, contact"
+    }
+  },
+  "required": [
+    "key",
+    "group"
+  ]
+}

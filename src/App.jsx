@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import { ThemeProvider } from 'next-themes'
 import { LanguageProvider } from '@/lib/LanguageContext'
 import Portfolio from './pages/Portfolio'
+import Admin from './pages/Admin'
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Router>
             <Routes>
               <Route path="/" element={<Portfolio />} />
+              <Route path="/admin" element={<Admin />} />
             </Routes>
           </Router>
           <Toaster />
