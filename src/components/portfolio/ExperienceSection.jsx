@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Briefcase, Calendar } from "lucide-react";
 import { useLanguage } from "@/lib/LanguageContext";
+import { useSiteSettings } from "@/lib/SiteSettingsContext";
 import { supabase } from "@/api/SupabaseClient.js";
 
 const FALLBACK_EXPERIENCE = [
@@ -51,9 +52,15 @@ function TimelineItem({ exp, index }) {
 }
 
 export default function ExperienceSection() {
-  const { t, lang } = useLanguage();
-  const e = t.experience;
+  const { lang } = useLanguage();
+  const { getText } = useSiteSettings();
   const [items, setItems] = useState(FALLBACK_EXPERIENCE);
+
+  const e = {
+    label:     getText("experience_label", lang) || (lang === "uk" ? "02 — Досвід" : "02 — Experience"),
+    title:     getText("experience_title", lang) || (lang === "uk" ? "Мій" : "My"),
+    highlight: getText("experience_highlight", lang) || (lang === "uk" ? "шлях" : "journey"),
+  };
 
   useEffect(() => {
     supabase.from("experience").select("*").order("order").then(({ data }) => {
@@ -61,9 +68,11 @@ export default function ExperienceSection() {
     });
   }, []);
 
-  const adapted = items.map(exp => ({
+  const adapted = items.map((exp) => ({
     ...exp,
-    description: lang === "uk" ? (exp.description_uk || exp.description) : (exp.description_en || exp.description),
+    description: lang === "uk"
+      ? (exp.description_uk || exp.description || "")
+      : (exp.description_en || exp.description || ""),
   }));
 
   return (

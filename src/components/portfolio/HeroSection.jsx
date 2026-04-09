@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { ArrowDown, Github, Send, Mail } from "lucide-react";
 import { useLanguage } from "@/lib/LanguageContext";
+import { useSiteSettings } from "@/lib/SiteSettingsContext";
 
 const SOCIAL_LINKS = {
   github: "https://github.com/stewe-snowwhite",
@@ -10,18 +11,30 @@ const SOCIAL_LINKS = {
 };
 
 export default function HeroSection() {
-  const { t } = useLanguage();
-  const h = t.hero;
+  const { lang } = useLanguage();
+  const { getText } = useSiteSettings();
+
+  const h = {
+    available: getText("hero_available", lang),
+    greeting: getText("hero_greeting", lang),
+    roles: getText("hero_roles", lang)?.split(", ").filter(Boolean) || [],
+    desc: getText("hero_desc", lang),
+    btn1: getText("hero_btn1", lang),
+    btn2: getText("hero_btn2", lang),
+  };
+
   const [display, setDisplay] = useState("");
   const state = useRef({ roleIndex: 0, charIndex: 0, deleting: false, pausing: false });
 
   useEffect(() => {
     state.current = { roleIndex: 0, charIndex: 0, deleting: false, pausing: false };
     setDisplay("");
-  }, [t]);
+  }, [lang]);
 
   useEffect(() => {
+    if (!h.roles.length) return;
     let timer;
+
     const tick = () => {
       const s = state.current;
       const roles = h.roles;
@@ -55,9 +68,10 @@ export default function HeroSection() {
         }
       }
     };
+
     timer = setTimeout(tick, 400);
     return () => clearTimeout(timer);
-  }, [t]);
+  }, [h.roles.join(",")]);
 
   return (
     <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden">

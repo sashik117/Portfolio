@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Code2, Palette, Zap, Globe } from "lucide-react";
 import { useLanguage } from "@/lib/LanguageContext";
+import { useSiteSettings } from "@/lib/SiteSettingsContext";
 
 const ICONS = [Code2, Palette, Zap, Globe];
 
@@ -39,8 +40,24 @@ function SkillBar({ name, level, delay }) {
 }
 
 export default function AboutSection() {
-  const { t } = useLanguage();
-  const a = t.about;
+  const { lang } = useLanguage();
+  const { getText } = useSiteSettings();
+
+  const a = {
+    label:      getText("about_label", lang),
+    title:      getText("about_title", lang),
+    highlight:  getText("about_highlight", lang),
+    p1:         getText("about_p1", lang),
+    p2:         getText("about_p2", lang),
+    skillsTitle: getText("about_skills_title", lang),
+    highlights: [
+      { label: getText("about_h1_label", lang), desc: getText("about_h1_desc", lang) },
+      { label: getText("about_h2_label", lang), desc: getText("about_h2_desc", lang) },
+      { label: getText("about_h3_label", lang), desc: getText("about_h3_desc", lang) },
+      { label: getText("about_h4_label", lang), desc: getText("about_h4_desc", lang) },
+    ],
+  };
+
   return (
     <section id="about" className="py-32 px-6 relative overflow-hidden">
       <div className="absolute top-0 right-0 w-72 h-72 bg-accent/10 rounded-full blur-3xl" />
@@ -62,7 +79,7 @@ export default function AboutSection() {
               {a.highlights.map(({ label, desc }, i) => {
                 const Icon = ICONS[i];
                 return (
-                  <motion.div key={label} {...fadeUp(0.2 + i * 0.1)}
+                  <motion.div key={label || i} {...fadeUp(0.2 + i * 0.1)}
                     className="p-4 rounded-xl bg-secondary/50 border border-border hover:border-primary/20 transition-colors group">
                     <Icon className="w-5 h-5 text-primary mb-3 group-hover:scale-110 transition-transform" />
                     <h4 className="text-sm font-semibold mb-1">{label}</h4>

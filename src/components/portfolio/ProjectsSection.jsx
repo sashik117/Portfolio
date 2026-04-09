@@ -4,6 +4,7 @@ import { ExternalLink, Github } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/lib/LanguageContext";
 import { supabase } from "@/api/SupabaseClient.js";
+import { useSiteSettings } from "@/lib/SiteSettingsContext";
 
 const CATEGORIES_UK = ["Всі", "Full-Stack", "Automation", "Backend"];
 const CATEGORIES_EN = ["All", "Full-Stack", "Automation", "Backend"];
