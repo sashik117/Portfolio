@@ -95,10 +95,14 @@ export default function TestimonialsSection() {
       setSubmitStatus("err");
     } else {
       setSubmitStatus("ok");
-      setShowForm(false);
       setForm({ author_name: "", author_role: "", message: "", rating: 5 });
     }
     setSubmitting(false);
+  };
+
+  const handleCloseForm = () => {
+    setShowForm(false);
+    setSubmitStatus(null);
   };
 
   const item = testimonials[current];
@@ -122,8 +126,10 @@ export default function TestimonialsSection() {
               <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">{tr.highlight}</span>
             </h2>
           </div>
-          <button onClick={() => { setShowForm(s => !s); setSubmitStatus(null); }}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-secondary/50 border border-border text-sm font-medium text-muted-foreground hover:text-foreground hover:border-primary/20 transition-all">
+          <button
+            onClick={() => { setShowForm(s => !s); setSubmitStatus(null); }}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-secondary/50 border border-border text-sm font-medium text-muted-foreground hover:text-foreground hover:border-primary/20 transition-all"
+          >
             {showForm ? <X className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
             {tr.leaveBtn}
           </button>
@@ -131,46 +137,97 @@ export default function TestimonialsSection() {
 
         <AnimatePresence>
           {showForm && (
-            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }} className="overflow-hidden mb-12">
-              <form onSubmit={handleSubmit} className="p-6 rounded-2xl bg-card border border-border space-y-4">
-                <h3 className="font-semibold text-lg">{tr.formTitle}</h3>
-                <p className="text-sm text-muted-foreground">💜 Дякую що знайшли час поділитися враженнями!</p>
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="overflow-hidden mb-12"
+            >
+              <div className="p-6 rounded-2xl bg-card border border-border">
+                {submitStatus === "ok" ? (
+  <motion.div
+    initial={{ opacity: 0, scale: 0.95 }}
+    animate={{ opacity: 1, scale: 1 }}
+    className="flex flex-col items-center gap-3 py-10 text-center"
+  >
+    <div className="w-14 h-14 rounded-full bg-primary/15 flex items-center justify-center mb-2">
+      <svg className="w-7 h-7 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M20 6L9 17l-5-5" />
+      </svg>
+    </div>
+    <p className="font-bold text-xl">Дякуємо! Ваш відгук надіслано на перевірку.</p>
+    <p className="text-sm text-muted-foreground">
+      Ваш відгук буде опублікований після перевірки.
+    </p>
+    <Button
+      type="button"
+      variant="outline"
+      className="mt-3 px-8"
+      onClick={handleCloseForm}
+    >
+      Закрити
+    </Button>
+  </motion.div>
+) : (
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    <h3 className="font-semibold text-lg">{tr.formTitle}</h3>
+                    <p className="text-sm text-muted-foreground">💜 Дякую що знайшли час поділитися враженнями!</p>
 
-                {submitStatus === "ok" && (
-                  <p className="text-sm text-green-500 bg-green-500/10 px-4 py-2 rounded-lg">Відгук надіслано! Він з'явиться після модерації.</p>
-                )}
-                {submitStatus === "err" && (
-                  <p className="text-sm text-destructive bg-destructive/10 px-4 py-2 rounded-lg">Помилка. Спробуй ще раз.</p>
-                )}
+                    {submitStatus === "err" && (
+                      <p className="text-sm text-destructive bg-destructive/10 px-4 py-2 rounded-lg">
+                        Помилка. Спробуй ще раз.
+                      </p>
+                    )}
 
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm font-medium mb-1.5 block">{tr.formName}</label>
-                    <Input required value={form.author_name} onChange={e => setForm({ ...form, author_name: e.target.value })}
-                      placeholder={tr.namePh} className="bg-secondary/50 border-border" />
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium mb-1.5 block">{tr.formRole}</label>
-                    <Input required value={form.author_role} onChange={e => setForm({ ...form, author_role: e.target.value })}
-                      placeholder={tr.rolePh} className="bg-secondary/50 border-border" />
-                  </div>
-                </div>
-                <div>
-                  <label className="text-sm font-medium mb-1.5 block">{tr.formMessage}</label>
-                  <Textarea required value={form.message} onChange={e => setForm({ ...form, message: e.target.value })}
-                    placeholder={tr.messagePh} rows={3} className="bg-secondary/50 border-border resize-none" />
-                </div>
-                <div>
-                  <label className="text-sm font-medium mb-2 block">Оцінка</label>
-                  <StarPicker value={form.rating} onChange={r => setForm({ ...form, rating: r })} />
-                </div>
-                <Button type="submit" disabled={submitting} className="bg-primary hover:bg-primary/90 text-primary-foreground">
-                  {submitting
-                    ? <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-                    : tr.formSubmit}
-                </Button>
-              </form>
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-sm font-medium mb-1.5 block">{tr.formName}</label>
+                        <Input
+                          required
+                          value={form.author_name}
+                          onChange={e => setForm({ ...form, author_name: e.target.value })}
+                          placeholder={tr.namePh}
+                          className="bg-secondary/50 border-border"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium mb-1.5 block">{tr.formRole}</label>
+                        <Input
+                          required
+                          value={form.author_role}
+                          onChange={e => setForm({ ...form, author_role: e.target.value })}
+                          placeholder={tr.rolePh}
+                          className="bg-secondary/50 border-border"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium mb-1.5 block">{tr.formMessage}</label>
+                      <Textarea
+                        required
+                        value={form.message}
+                        onChange={e => setForm({ ...form, message: e.target.value })}
+                        placeholder={tr.messagePh}
+                        rows={3}
+                        className="bg-secondary/50 border-border resize-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium mb-2 block">Оцінка</label>
+                      <StarPicker value={form.rating} onChange={r => setForm({ ...form, rating: r })} />
+                    </div>
+                    <Button
+                      type="submit"
+                      disabled={submitting}
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                    >
+                      {submitting
+                        ? <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                        : tr.formSubmit}
+                    </Button>
+                  </form>
+                )}
+              </div>
             </motion.div>
           )}
         </AnimatePresence>

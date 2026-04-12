@@ -74,10 +74,9 @@ function TestimonialCard({ t, onToggle, onDelete }) {
           </div>
           <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">"{t.message}"</p>
           <div className="flex gap-1 mt-2">
-            {"★★★★★".split("").map((star, i) => (
-              <span key={i} className="text-yellow-400 text-sm">★</span>
-            ))}
-          </div>
+             {[1, 2, 3, 4, 5].map((star) => (
+            <span key={star} className={`text-sm ${star <= (t.rating || 5) ? "text-yellow-400" : "text-muted-foreground/30"}`}>★</span>
+          ))} </div>
         </div>
 
         <div className="flex gap-1.5 shrink-0">

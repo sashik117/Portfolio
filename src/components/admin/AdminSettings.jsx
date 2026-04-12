@@ -6,6 +6,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { Check, RefreshCw, ChevronDown, ChevronUp } from "lucide-react";
 
 const DEFAULT_SETTINGS = [
+  // ── Hero ────────────────────────────────────────
+  { key: "hero_available",      group: "hero",    type: "input",    value_uk: "Зосереджений на проєкті, але відкритий до ідей", value_en: "Focused on a project, but open to ideas", label: "Статус (зелена кнопка)" },
+  { key: "hero_greeting",       group: "hero",    type: "input",    value_uk: "Привіт, я", value_en: "Hi, I'm", label: "Вітання перед ім'ям" },
+  { key: "hero_roles",          group: "hero",    type: "input",    value_uk: "Full-Stack Developer, Automation Expert, WordPress Architect, Node.js Developer", value_en: "Full-Stack Developer, Automation Expert, WordPress Architect, Node.js Developer", label: "Ролі (через кому)" },
+  { key: "hero_desc",           group: "hero",    type: "textarea", value_uk: "Створюю цифрові рішення, що працюють самі.", value_en: "I build digital solutions that run themselves.", label: "Опис (підзаголовок)" },
+  { key: "hero_btn1",           group: "hero",    type: "input",    value_uk: "Мої роботи", value_en: "View My Work", label: "Кнопка 1" },
+  { key: "hero_btn2",           group: "hero",    type: "input",    value_uk: "Зв'язатися", value_en: "Get In Touch", label: "Кнопка 2" },
+  // ── Stats ────────────────────────────────────────
   { key: "stat_projects",       group: "stats",   type: "input",    value_uk: "25+",   value_en: "25+",   label: "Проєктів — значення" },
   { key: "stat_projects_label", group: "stats",   type: "input",    value_uk: "Запущених комерційних проєктів", value_en: "Commercial Projects Launched", label: "Проєктів — підпис" },
   { key: "stat_years",          group: "stats",   type: "input",    value_uk: "4+",    value_en: "4+",    label: "Роки — значення" },
@@ -14,12 +22,7 @@ const DEFAULT_SETTINGS = [
   { key: "stat_code_label",     group: "stats",   type: "input",    value_uk: "Коду проходить внутрішній аудит", value_en: "Code Passes Internal Security Audit", label: "Якість коду — підпис" },
   { key: "stat_auto",           group: "stats",   type: "input",    value_uk: "10+",   value_en: "10+",   label: "Автоматизацій — значення" },
   { key: "stat_auto_label",     group: "stats",   type: "input",    value_uk: "Складних сценаріїв автоматизації", value_en: "Complex Automation Scenarios", label: "Автоматизацій — підпис" },
-  { key: "hero_available",      group: "hero",    type: "input",    value_uk: "Зосереджений на проєкті, але відкритий до ідей", value_en: "Focused on a project, but open to ideas", label: "Статус (зелена кнопка)" },
-  { key: "hero_greeting",       group: "hero",    type: "input",    value_uk: "Привіт, я", value_en: "Hi, I'm", label: "Вітання перед ім'ям" },
-  { key: "hero_roles",          group: "hero",    type: "input",    value_uk: "Full-Stack Developer, Automation Expert, WordPress Architect, Node.js Developer", value_en: "Full-Stack Developer, Automation Expert, WordPress Architect, Node.js Developer", label: "Ролі (через кому)" },
-  { key: "hero_desc",           group: "hero",    type: "textarea", value_uk: "Створюю цифрові рішення, що працюють самі.", value_en: "I build digital solutions that run themselves.", label: "Опис (підзаголовок)" },
-  { key: "hero_btn1",           group: "hero",    type: "input",    value_uk: "Мої роботи", value_en: "View My Work", label: "Кнопка 1" },
-  { key: "hero_btn2",           group: "hero",    type: "input",    value_uk: "Зв'язатися", value_en: "Get In Touch", label: "Кнопка 2" },
+  // ── About ────────────────────────────────────────
   { key: "about_label",         group: "about",   type: "input",    value_uk: "01 — Про мене", value_en: "01 — About", label: "Мітка секції" },
   { key: "about_title",         group: "about",   type: "input",    value_uk: "Техніка, яка працює", value_en: "Tech that works", label: "Заголовок" },
   { key: "about_highlight",     group: "about",   type: "input",    value_uk: "на бізнес", value_en: "for business", label: "Заголовок — виділена частина" },
@@ -34,6 +37,15 @@ const DEFAULT_SETTINGS = [
   { key: "about_h3_desc",       group: "about",   type: "textarea", value_uk: "Будь-який розробник відкриє мій проєкт і одразу все зрозуміє", value_en: "Any developer can open my project and understand it immediately", label: "Картка 3 — опис" },
   { key: "about_h4_label",      group: "about",   type: "input",    value_uk: "Прозорість", value_en: "Transparency", label: "Картка 4 — заголовок" },
   { key: "about_h4_desc",       group: "about",   type: "textarea", value_uk: "Завжди поясню технічні нюанси простою мовою", value_en: "Always explain technical details in plain language", label: "Картка 4 — опис" },
+  // ── Projects ────────────────────────────────────────
+  { key: "projects_label",     group: "projects", type: "input",    value_uk: "02 — Проєкти",  value_en: "02 — Projects",    label: "Мітка секції" },
+  { key: "projects_title",     group: "projects", type: "input",    value_uk: "Обрані",        value_en: "Selected",         label: "Заголовок" },
+  { key: "projects_highlight", group: "projects", type: "input",    value_uk: "роботи",        value_en: "works",            label: "Заголовок — виділена частина" },
+  // ── Experience ──────────────────────────────────────
+  { key: "experience_label",     group: "experience", type: "input", value_uk: "03 — Досвід", value_en: "03 — Experience", label: "Мітка секції" },
+  { key: "experience_title",     group: "experience", type: "input", value_uk: "Мій",          value_en: "My",              label: "Заголовок" },
+  { key: "experience_highlight", group: "experience", type: "input", value_uk: "шлях",         value_en: "journey",         label: "Заголовок — виділена частина" },
+  // ── Contact ────────────────────────────────────────
   { key: "contact_label",       group: "contact", type: "input",    value_uk: "04 — Контакти", value_en: "04 — Contact", label: "Мітка секції" },
   { key: "contact_title",       group: "contact", type: "input",    value_uk: "Працюймо", value_en: "Let's work", label: "Заголовок" },
   { key: "contact_highlight",   group: "contact", type: "input",    value_uk: "разом", value_en: "together", label: "Заголовок — виділена частина" },
@@ -45,9 +57,11 @@ const DEFAULT_SETTINGS = [
 ];
 
 const GROUPS = [
-  { key: "stats",   emoji: "📊", label: "Статистика" },
   { key: "hero",    emoji: "🦸", label: "Hero секція" },
+  { key: "stats",   emoji: "📊", label: "Статистика" },
   { key: "about",   emoji: "👤", label: "Про мене" },
+  { key: "projects",  emoji: "💼", label: "Проєкти" },
+  { key: "experience",  emoji: "🧭", label: "Досвід" },
   { key: "contact", emoji: "📬", label: "Контакти" },
 ];
 

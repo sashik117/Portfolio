@@ -96,10 +96,18 @@ function ProjectCard({ project, viewLabel }) {
 
 export default function ProjectsSection() {
   const { t, lang } = useLanguage();
-  const p = t.projects;
+  const { getText } = useSiteSettings();
   const CATEGORIES = lang === "uk" ? CATEGORIES_UK : CATEGORIES_EN;
   const [activeCategory, setActiveCategory] = useState(CATEGORIES[0]);
   const [projects, setProjects] = useState(FALLBACK_PROJECTS);
+
+  const p = {
+    label:     getText("projects_label",     lang) || t.projects.label,
+    title:     getText("projects_title",     lang) || t.projects.title,
+    highlight: getText("projects_highlight", lang) || t.projects.highlight,
+    view:      t.projects.view,
+    noProjects: t.projects.noProjects,
+  };
 
   useEffect(() => {
     supabase.from("projects").select("*").order("order").then(({ data }) => {

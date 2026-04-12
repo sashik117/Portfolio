@@ -148,21 +148,35 @@ export default function ContactSection() {
               <form onSubmit={handleSubmit} noValidate
                 className="p-8 rounded-2xl bg-card border border-border space-y-6 relative z-20">
                 <div className="grid sm:grid-cols-2 gap-4">
-                  <Input name="name" required value={form.name} onChange={handleChange}
-                    placeholder={lang === "uk" ? "Ім'я" : "Name"}
-                    autoComplete="name" className="bg-secondary/50" />
-                  <Input name="email" type="email" required value={form.email} onChange={handleChange}
-                    placeholder="Email" autoComplete="email" className="bg-secondary/50" />
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-semibold">{lang === "uk" ? "Ім'я" : "Name"}</label>
+                    <Input name="name" required value={form.name} onChange={handleChange}
+                      placeholder={lang === "uk" ? "Іван Петренко" : "John Doe"}
+                      autoComplete="name" className="bg-secondary/50" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-semibold">Email</label>
+                    <Input name="email" type="email" required value={form.email} onChange={handleChange}
+                     placeholder={lang === "uk" ? "ivan@example.com" : "john@example.com"}
+                     autoComplete="email" className="bg-secondary/50" />
+                  </div>
                 </div>
-                <Input name="subject" required value={form.subject} onChange={handleChange}
-                  placeholder={lang === "uk" ? "Тема" : "Subject"} className="bg-secondary/50" />
-                <Textarea name="message" required value={form.message} onChange={handleChange}
-                  placeholder={lang === "uk" ? "Повідомлення..." : "Message..."}
-                  rows={5} className="bg-secondary/50 resize-none" />
+                <div className="space-y-1.5">
+                  <label className="text-sm font-semibold">{lang === "uk" ? "Тема" : "Subject"}</label>
+                  <Input name="subject" required value={form.subject} onChange={handleChange}
+                    placeholder={lang === "uk" ? "Обговорення проекту" : "Project Discussion"}
+                    className="bg-secondary/50" />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-sm font-semibold">{lang === "uk" ? "Повідомлення" : "Message"}</label>
+                  <Textarea name="message" required value={form.message} onChange={handleChange}
+                    placeholder={lang === "uk" ? "Розкажи про свій проєкт..." : "Tell me about your project..."}
+                    rows={5} className="bg-secondary/50 resize-none" />
+                </div>
                 <Button type="submit" disabled={sending} className="w-full h-12 active:scale-95 transition-transform">
                   {sending
                     ? <div className="w-5 h-5 border-2 border-t-transparent rounded-full animate-spin" />
-                    : <><Send className="w-4 h-4 mr-2" />{lang === "uk" ? "Надіслати" : "Send"}</>}
+                    : <><Send className="w-4 h-4 mr-2" />{lang === "uk" ? "Надіслати повідомлення" : "Send Message"}</>}
                 </Button>
               </form>
             )}
