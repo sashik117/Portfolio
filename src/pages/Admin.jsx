@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Terminal, LogOut, Lock, Moon, Sun } from "lucide-react";
+import { Terminal, LogOut, Lock, Moon, Sun, Eye, EyeOff } from "lucide-react"; // Додав Eye та EyeOff
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import AdminProjects from "@/components/admin/AdminProjects";
@@ -53,7 +53,6 @@ function AdminContent() {
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Тема */}
             <button
               onClick={toggleTheme}
               className="flex items-center justify-center w-8 h-8 rounded-lg bg-secondary/60 border border-border text-muted-foreground hover:text-foreground hover:border-primary/30 transition-all"
@@ -61,7 +60,6 @@ function AdminContent() {
               {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
 
-            {/* Вихід */}
             <Button
               variant="ghost"
               size="sm"
@@ -112,6 +110,7 @@ export default function Admin() {
   const [authed, setAuthed] = useState(() => sessionStorage.getItem("admin_ok") === "1");
   const [pw, setPw] = useState("");
   const [err, setErr] = useState(false);
+  const [showPw, setShowPw] = useState(false); // Стан для показу пароля
 
   const login = () => {
     if (pw === ADMIN_PASSWORD) {
@@ -133,14 +132,23 @@ export default function Admin() {
             </span>
           </div>
 
-          <Input
-            type="password"
-            placeholder="Пароль"
-            value={pw}
-            onChange={e => { setPw(e.target.value); setErr(false); }}
-            onKeyDown={e => e.key === "Enter" && login()}
-            className={err ? "border-destructive" : ""}
-          />
+          <div className="relative">
+            <Input
+              type={showPw ? "text" : "password"} // Перемикання типу
+              placeholder="Пароль"
+              value={pw}
+              onChange={e => { setPw(e.target.value); setErr(false); }}
+              onKeyDown={e => e.key === "Enter" && login()}
+              className={err ? "border-destructive pr-10" : "pr-10"}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPw(!showPw)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            </button>
+          </div>
 
           {err && <p className="text-xs text-destructive">Невірний пароль</p>}
 

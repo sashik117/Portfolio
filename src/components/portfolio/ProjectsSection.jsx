@@ -97,8 +97,11 @@ function ProjectCard({ project, viewLabel }) {
 export default function ProjectsSection() {
   const { t, lang } = useLanguage();
   const { getText } = useSiteSettings();
+  
   const CATEGORIES = lang === "uk" ? CATEGORIES_UK : CATEGORIES_EN;
-  const [activeCategory, setActiveCategory] = useState(CATEGORIES[0]);
+  
+  // ОНОВЛЕНО: Використовуємо індекс замість тексту назви
+  const [activeIndex, setActiveIndex] = useState(0);
   const [projects, setProjects] = useState(FALLBACK_PROJECTS);
 
   const p = {
@@ -115,9 +118,10 @@ export default function ProjectsSection() {
     });
   }, []);
 
-  const filtered = activeCategory === CATEGORIES[0]
+  // ОНОВЛЕНО: Фільтрація за ключем з англійського масиву
+  const filtered = activeIndex === 0
     ? projects
-    : projects.filter((proj) => (proj.categories || []).includes(activeCategory));
+    : projects.filter((proj) => (proj.categories || []).includes(CATEGORIES_EN[activeIndex]));
 
   return (
     <section id="projects" className="py-32 px-6 relative">
@@ -132,23 +136,29 @@ export default function ProjectsSection() {
             <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">{p.highlight}</span>
           </h2>
         </motion.div>
+
+        {/* КАТЕГОРІЇ (ОНОВЛЕНОsetActiveIndex) */}
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.55, ease: "easeOut", delay: 0.15 }}
           className="flex flex-wrap gap-2 mb-10">
-          {CATEGORIES.map((cat) => (
-            <button key={cat} onClick={() => setActiveCategory(cat)}
+          {CATEGORIES.map((cat, index) => (
+            <button key={cat} onClick={() => setActiveIndex(index)}
               className={`relative px-5 py-2 rounded-xl text-sm font-medium transition-all duration-200 border ${
-                activeCategory === cat
+                activeIndex === index
                   ? "bg-primary text-primary-foreground border-primary"
                   : "bg-secondary/50 text-muted-foreground border-border hover:text-foreground hover:border-primary/20"
               }`}>
               {cat}
-              <span className={`ml-2 text-xs font-mono ${activeCategory === cat ? "opacity-80" : "opacity-50"}`}>
-                {cat === CATEGORIES[0] ? projects.length : projects.filter((proj) => (proj.categories || []).includes(cat)).length}
+              {/* ОНОВЛЕНО: Лічильник тепер не зникає при зміні мови */}
+              <span className={`ml-2 text-xs font-mono ${activeIndex === index ? "opacity-80" : "opacity-50"}`}>
+                {index === 0 
+                  ? projects.length 
+                  : projects.filter((proj) => (proj.categories || []).includes(CATEGORIES_EN[index])).length}
               </span>
             </button>
           ))}
         </motion.div>
+
         <motion.div layout className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           <AnimatePresence mode="popLayout">
             {filtered.map((project) => (
@@ -156,6 +166,7 @@ export default function ProjectsSection() {
             ))}
           </AnimatePresence>
         </motion.div>
+
         {filtered.length === 0 && (
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center text-muted-foreground py-16">
             {p.noProjects}

@@ -7,6 +7,7 @@ import { LanguageProvider } from '@/lib/LanguageContext'
 import { SiteSettingsProvider } from '@/lib/SiteSettingsContext'
 import Portfolio from './pages/Portfolio'
 import Admin from './pages/Admin'
+import PageNotFound from './lib/PageNotFound' 
 
 function App() {
   return (
@@ -18,6 +19,8 @@ function App() {
               <Routes>
                 <Route path="/" element={<Portfolio />} />
                 <Route path="/admin" element={<Admin />} />
+                
+                <Route path="*" element={<PageNotFound />} />
               </Routes>
             </Router>
             <Toaster />

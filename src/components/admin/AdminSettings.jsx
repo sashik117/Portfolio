@@ -92,7 +92,7 @@ function SettingField({ defItem, value, onChange, onSave, saving }) {
 }
 
 function GroupSection({ group, settings, onUpdate, onSave, saving }) {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const items = DEFAULT_SETTINGS.filter(d => d.group === group.key);
   return (
     <div className="rounded-xl border border-border overflow-hidden">
